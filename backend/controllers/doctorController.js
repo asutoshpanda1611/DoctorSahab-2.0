@@ -42,4 +42,20 @@ const changeAvailability = async (req, res) => {
   }
 };
 
-export { changeAvailability };
+const doctorList = async (req, res) => {
+  try {
+    const doctors = await doctorModel.find({}).select(['-password', '-email']);
+    res.json({
+      success: true,
+      doctors,
+    });
+  } catch (error) {
+    console.error('Error fetching doctors:', error); // More descriptive error logging
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch doctors: ' + error.message,
+    });
+  }
+};
+
+export { changeAvailability,doctorList };
