@@ -60,4 +60,42 @@ const registerUser =async(req,res) => {
     }
 }
 
-export {registerUser}
+//Api for userLogin
+
+const loginUser = async(req,res) => {
+  try {
+    const {email,password} = req.body
+    const user = await userModel.findOne({email})
+    if(!user){
+        return res.json({
+            success: false,
+            message: "User does not exist"
+          }); 
+    }
+    const isMatch = await bcrypt.compare(password,user.password)
+
+    if(isMatch){
+        const token = jwt.sign({id:user._id},process.env.JWT_SECRET)
+        res.json({
+            success:true,
+            token
+        })
+    }
+    else{
+        return res.json({
+            success: false,
+            message: "Invlid Credentials",
+          });
+    }
+
+  } catch (error) {
+    console.log(error);
+    return res.json({
+     success: false,
+     message: error.message,
+   });
+  }
+
+}
+
+export {registerUser,loginUser}
