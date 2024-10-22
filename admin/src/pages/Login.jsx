@@ -1,16 +1,13 @@
 import { useContext, useState } from "react";
-import { assets } from "../assets/assets.js";
 import { AdminContext } from "../context/AdminContext.jsx";
 import axios from "axios";
 import { toast } from "react-toastify";
-
 
 const Login = () => {
   const [state, setState] = useState("Admin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { setAToken, backendUrl } = useContext(AdminContext);
-  
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -21,17 +18,18 @@ const Login = () => {
           password,
         });
         if (data.success) {
-          localStorage.setItem('aToekn',data.token)
+          localStorage.setItem('aToken', data.token); // Save token in local storage
           setAToken(data.token);
-        }
-        else{
-          toast.error(data.message)
+          toast.success("Login successful!");
+        } else {
+          toast.error(data.message);
         }
       } else {
         // Handle doctor login case here
       }
     } catch (error) {
       console.log(error);
+      toast.error("An error occurred during login");
     }
   };
 

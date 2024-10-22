@@ -104,11 +104,35 @@ const loginAdmin = async(req,res) => {
     console.error(error);
 
     // Sending an error response back to the client
-    return res.status(500).json({
+    return res.json({
       success: false,
       message: error.message
     });
   }
 }
 
-export { addDoctor,loginAdmin };
+// Api to get all doctor list for admin panel
+
+const allDoctors =async (req,res) => {
+    try {
+       const doctors = await doctorModel.find({}).select('-passowrd') 
+       res.json({
+        success: true,
+        doctors
+       })    
+
+
+    } catch (error) {
+       console.error(error);
+
+    // Sending an error response back to the client
+    return res.json({
+      success: false,
+      message: error.message
+    });
+    }
+}  
+
+
+
+export { addDoctor,loginAdmin, allDoctors };

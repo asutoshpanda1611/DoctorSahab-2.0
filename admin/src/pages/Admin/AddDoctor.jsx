@@ -45,17 +45,31 @@ const AddDoctor = () => {
               console.log(`${key} : ${value}`);
               
            })  
-           const { data } = await axios.post(`${backendUrl}api/admin/add-doctor`, formData, {
+           const { data } = await axios.post(backendUrl+'/api/admin/add-doctor', formData, {
             headers: { aToken },
         });
 
         if (data.success) {
             toast.success(data.message);
+            setDocImg(false);
+            setName('');
+            setPassword('');
+            setEmail('');
+            setPassword('')
+            setAddress1('')
+            setAddress2('')
+            setDegree('')
+            setAbout('')
+            setFees('')
+            setExperience('1')
         } else {
             toast.error(data.message);
         }
     } catch (error) {
-        toast.error("error occurred",error);
+        toast.error(error.message);
+        console.log(error);
+        
+
     }
 
 
