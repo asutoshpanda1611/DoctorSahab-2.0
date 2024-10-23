@@ -13,6 +13,10 @@ const appointmentsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  slotTime: {
+    type: String,
+    required: true,
+  },
   userData: {
     type: Object,
     required: true,
