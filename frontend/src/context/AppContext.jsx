@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react";
-
 import axios from 'axios'
 import { toast } from "react-toastify";
 
@@ -15,6 +14,7 @@ const AppContextProvider = (props) => {
 
    const [doctors,setDoctors] = useState([])
    const [token,setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token'):false)
+   const [userData,setUserData] = useState(false)
    
     const getDoctorsData = async () => {
         try {
@@ -25,21 +25,61 @@ const AppContextProvider = (props) => {
             toast.error(data.message);
           }
         } catch (error) {
-          console.error('Error fetching doctors data:', error); // Log error for debugging
+          console.error('Error fetching doctors data:', error); 
           toast.error(error.message);
         }
       };
+
+      const loadUserProfileData = async () => {
+        try {
+          const { data } = await axios.get(backendUrl + '/api/user/get-profile', {
+            headers: {
+              token
+            }
+          });
+      
+         
+      
+          if (data.success) {
+            
+            setUserData(data.message);
+          } else {
+            toast.error(data.message);
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          toast.error(error.message);
+        }
+      };
+      
+      
+
+
       const value = {
         doctors,
         currencySymbol,
         token,
         setToken,
-        backendUrl
+        backendUrl,
+        userData,
+        setUserData,
+        loadUserProfileData
     }
       
      useEffect(() => {
         getDoctorsData()
      },[])
+
+     useEffect(() => {
+       
+      if(token){
+        loadUserProfileData();
+      }
+      else{
+        setUserData(false);
+      }
+    }, [token]);
+    
 
 
     
