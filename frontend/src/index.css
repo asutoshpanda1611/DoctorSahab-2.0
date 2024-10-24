@@ -4,18 +4,20 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
     font-family: Outfit;
 }
 
-.active hr{
+.active hr {
     @apply block
 }
-::-webkit-scrollbar{
-    @apply hidden;
-}
-@media(max-width:740px){
-    .active p{
-        @apply text-white bg-primary
+
+@media (max-width:740px) {
+    .active  p{
+       @apply text-white bg-primary
     }
+}
+
+::-webkit-scrollbar {
+    @apply hidden
 }
