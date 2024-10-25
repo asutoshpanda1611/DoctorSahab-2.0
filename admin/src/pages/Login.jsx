@@ -3,44 +3,45 @@ import React, { useContext, useState } from 'react'
 import { DoctorContext } from '../context/DoctorContext'
 import { AdminContext } from '../context/AdminContext'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom' // Import useNavigate from react-router-dom
 
 const Login = () => {
 
   const [state, setState] = useState('Admin')
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL
-
   const { setDToken } = useContext(DoctorContext)
   const { setAToken } = useContext(AdminContext)
+  const navigate = useNavigate() // Initialize navigate
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
-    if (state === 'Admin') {
-
-      const { data } = await axios.post(backendUrl + '/api/admin/login', { email, password })
-      if (data.success) {
-        setAToken(data.token)
-        localStorage.setItem('aToken', data.token)
+    try {
+      if (state === 'Admin') {
+        const { data } = await axios.post(backendUrl + '/api/admin/login', { email, password })
+        if (data.success) {
+          setAToken(data.token)
+          localStorage.setItem('aToken', data.token)
+          navigate('/admin-dashboard') // Redirect to '/dashboard' after successful login
+        } else {
+          toast.error(data.message)
+        }
       } else {
-        toast.error(data.message)
+        const { data } = await axios.post(backendUrl + '/api/doctor/login', { email, password })
+        if (data.success) {
+          setDToken(data.token)
+          localStorage.setItem('dToken', data.token)
+          navigate('/admin-dashboard') 
+        } else {
+          toast.error(data.message)
+        }
       }
-
-    } else {
-
-      const { data } = await axios.post(backendUrl + '/api/doctor/login', { email, password })
-      if (data.success) {
-        setDToken(data.token)
-        localStorage.setItem('dToken', data.token)
-      } else {
-        toast.error(data.message)
-      }
-
+    } catch (error) {
+      toast.error(error.message)
     }
-
   }
 
   return (
